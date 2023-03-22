@@ -23,6 +23,11 @@ jobs:
         run: |-
           echo ${{secrets.CI_REGISTRY_PASSWORD}} | docker login ${{env.CI_REGISTRY}} -u ${{env.CI_REGISTRY_USER}} --password-stdin
 
+      - name: Set SOURCE env
+        run: |-
+          echo "SOURCE_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Set TAG main
         run: |-
           echo "main"
