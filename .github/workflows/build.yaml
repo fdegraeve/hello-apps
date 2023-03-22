@@ -46,7 +46,7 @@ jobs:
 
       - name: Build
         run: |-
-          docker build --rm --no-cache=true -t "${{env.CI_REGISTRY}}/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}" .
+          docker build --rm --no-cache=true -t "${{env.CI_REGISTRY}}/fdegraeve/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}" .
       
       - name: Publish
         run: |-
