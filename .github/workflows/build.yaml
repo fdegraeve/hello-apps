@@ -21,7 +21,7 @@ jobs:
 
       - name: Login registry
         run: |-
-          docker login ${{env.CI_REGISTRY}} -u ${{env.CI_REGISTRY_USER}} -p ${{secrets.CI_REGISTRY_PASSWORD}}
+          echo ${{secrets.CI_REGISTRY_PASSWORD}} | docker login ${{env.CI_REGISTRY}} -u ${{env.CI_REGISTRY_USER}} --password-stdin
 
       - name: Set TAG main
         run: |-
