@@ -50,4 +50,4 @@ jobs:
       
       - name: Publish
         run: |-
-          docker push "${{env.CI_REGISTRY}}/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}"
+          docker push "${{env.CI_REGISTRY}}/fdegraeve/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}"
