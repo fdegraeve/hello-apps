@@ -1,0 +1,48 @@
+name: Master Workflow - Build and deploy to Docker Hub
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: hello
+  CI_REGISTRY_USER: fdegraeve
+  CI_REGISTRY: registry.hub.docker.com
+
+jobs:
+  Build:
+    name: Build container
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Login registry
+        run: |-
+          docker login ${{env.CI_REGISTRY}} -u ${{env.CI_REGISTRY_USER}} -p ${{secrets.CI_REGISTRY_PASSWORD}}
+
+      - name: Set TAG main
+        run: |-
+          echo "main"
+          echo "TAG_NAME=latest" >> $GITHUB_ENV
+        if: env.SOURCE_BRANCH == 'main'
+
+      - name: Set TAG version
+        run: |-
+          echo "TAG_NAME=${{env.SOURCE_TAG}}" >> $GITHUB_ENV
+        if: env.SOURCE_BRANCH != 'main' && contains(env.SOURCE_BRANCH , 'refs/tags')
+
+      - name: Set TAG branch
+        run: |-
+          echo "TAG_NAME=${{env.SOURCE_BRANCH}}" >> $GITHUB_ENV
+        if: env.SOURCE_BRANCH != 'main' && !contains(env.SOURCE_BRANCH , 'refs/tags')
+
+      - name: Build
+        run: |-
+          docker build --rm --no-cache=true -t "${{env.CI_REGISTRY}}/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}" .
+      
+      - name: Publish
+        run: |-
+          docker push "${{env.CI_REGISTRY}}/${{env.IMAGE_NAME}}:${{env.TAG_NAME}}"
